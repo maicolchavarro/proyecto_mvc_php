@@ -3,8 +3,9 @@
 namespace App\models\db;
 
 use mysqli;
+use Exception;
 
-class EjemploDb
+class tareasDb
 {
     private $host = 'localhost';
     private $user = 'root';
@@ -20,6 +21,10 @@ class EjemploDb
             $this->pwd,
             $this->name
         );
+
+        if ($this->conex->connect_error) {
+            throw new Exception("Connection failed: " . $this->conex->connect_error);
+        }
     }
 
     function close()
@@ -29,10 +34,6 @@ class EjemploDb
 
     function query($sql)
     {
-        if ($this->conex->connect_error) {
-            echo $this->conex->connect_error;
-            return null;
-        }
         return $this->conex->query($sql);
     }
 }

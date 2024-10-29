@@ -1,3 +1,17 @@
+<?php
+require '../models/db/tareasDb.php';
+require '../models/queries/tareasQueries.php';
+require '../models/entities/tarea.php';
+require '../controllers/tareasController.php';
+require '../views/tareasView.php';
+
+use App\Views\TareasViews;
+
+$tareasView = new TareasViews();
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,6 +20,12 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>hola mundo</h1>
+<header>
+    <h1>gestion de tareas</h1>
+</header>
+<section>
+    <br>
+    <?php  echo $tareasView-> getTable();?>
+</section>
 </body>
 </html>
