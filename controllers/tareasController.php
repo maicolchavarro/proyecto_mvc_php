@@ -1,13 +1,10 @@
 <?php
-
 namespace App\controllers;
 
-use App\models\entities\tarea;
+use App\models\entities\Empleado;
 
-class tareasController
-{
-    function getAllTareas()
-    {
-        return tarea::all();
+class TareasController {
+    public function getAllTareas() {
+        return Empleado::all();
     }
 }
