@@ -30,4 +30,6 @@ class TareasViews {
         }
         return $filas;
     }
+
+    
 }
