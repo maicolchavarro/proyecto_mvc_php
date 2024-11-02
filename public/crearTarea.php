@@ -4,6 +4,11 @@ require '../models/queries/tareasQueries.php';
 require '../models/entities/tarea.php';
 require '../controllers/tareasController.php';
 require '../views/tareasView.php';
+
+use App\views\tareasViews;
+
+$empleadosViews = new TareasViews();
+$form = $empleadosViews->getformTarea($_GET);   
 ?>
 
 <!DOCTYPE html>
@@ -18,7 +23,10 @@ require '../views/tareasView.php';
 <body>
     <section>
         <h1>Crear tarea</h1>
-        <form action="crearTarea">
+        <section>
+            <?php echo $form;?>
+        </section>
+        <!-- <form action="crearTarea">
             <label for="tituloTarea">Título de la tarea</label>
             <input type="text" id="tituloTarea" name="tituloTarea" required>
             <br>
@@ -54,8 +62,10 @@ require '../views/tareasView.php';
 
             <label for="creadorTarea">Creador de la tarea</label>
             <select id="creadorTarea" name="creadorTarea" required>
+                
             </select>
             <br>
+
 
             <label for="responsableTarea">Responsable de la tarea</label>
             <select id="responsableTarea" name="responsableTarea" required>
@@ -76,7 +86,7 @@ require '../views/tareasView.php';
 
             <button type="submit">Crear Tarea</button>
             <br>
-        </form>
+        </form> -->
     </section>
     <a href="inicio.php">Volver</a>
 </body>

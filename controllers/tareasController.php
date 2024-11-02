@@ -7,4 +7,9 @@ class TareasController {
     public function getAllTareas() {
         return Empleado::all();
     }
+
+    function getEmpleado($id)
+    {
+        return Empleado::find($id);
+    }
 }

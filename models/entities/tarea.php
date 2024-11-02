@@ -31,4 +31,19 @@ class Empleado {
         $db->close();
         return $empleados;
     }
+
+    static function find($id)
+    {
+        $sql = tareasQueries::whereId($id);
+        $db = new tareasDb(); 
+        $result = $db->query($sql);
+        $empleado = null;
+        while ($row = $result->fetch_assoc()) {
+            $empleado = new Empleado();
+            $empleado->set('id', $row['id']);
+            $empleado->set('nombre', $row['nombre']);
+        }
+        $db->close();
+        return $empleado;
+    }
 }

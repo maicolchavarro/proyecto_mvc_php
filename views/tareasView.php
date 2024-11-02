@@ -31,5 +31,37 @@ class TareasViews {
         return $filas;
     }
 
+    function getformTarea()
+{
+    $empleados = $this->controller->getAllTareas();
+
+    $form = '<form action="crearTarea.php" method="post">';
+
+    $form .= '  <div>';
+    $form .= '      <label>Título de la tarea</label>';
+    $form .= '      <input type="text" name="tituloTarea" required>';
+    $form .= '  </div>';
+    $form .= '  <div>';
+    $form .= '      <label for="descripcionTarea">Descripción</label>';
+    $form .= '      <textarea id="descripcionTarea" name="descripcionTarea" rows="4" required></textarea>';
+    $form .= '  </div>';
+    $form .= '  <div>';
+    $form .= '      <label for="creadorTarea">Creador de la tarea</label>';
+    $form .= '      <select id="creadorTarea" name="creadorTarea" required>';
+    foreach ($empleados as $empleado) {
+        $nombre = htmlspecialchars($empleado->get('nombre'));
+        $id = htmlspecialchars($empleado->get('id'));
+        $form .= '          <option value="' . $id . '">' . $nombre . '</option>';
+    }
     
+    $form .= '      </select>';
+    $form .= '  </div>';
+    $form .= '  <div>';
+    $form .= '      <button type="submit">Guardar</button>';
+    $form .= '  </div>';
+    $form .= '</form>';
+
+    return $form;
+}
+
 }
