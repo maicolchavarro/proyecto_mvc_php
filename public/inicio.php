@@ -1,16 +1,22 @@
 <?php
-// Elimina o comenta la línea de redirección
-// header('location: public/inicio.php');
-
-require '../models/db/tareasDb.php';
-require '../models/queries/tareasQueries.php';
-require '../models/entities/tarea.php';
+require '../controllers/empleadosController.php';
 require '../controllers/tareasController.php';
+require '../models/db/tareasDb.php';
+require '../models/entities/empleados.php';
+require '../models/entities/tareas.php';
+require '../models/queries/empleadosQueries.php';
+require '../models/queries/tareasQueries.php';
+require '../views/empleadosView.php';
+require '../views/modalsView.php';
 require '../views/tareasView.php';
 
+use App\views\EmpleadosViews;
+use App\views\ModalsView;
 use App\views\TareasViews;
 
+$empleadosView = new EmpleadosViews();
 $tareasView = new TareasViews();
+$modalsView = new ModalsView();
 ?>
 
 <!DOCTYPE html>
@@ -19,23 +25,30 @@ $tareasView = new TareasViews();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Tareas</title>
+    <title>Inicio</title>
+    <link rel="stylesheet" href="css/modals.css">
 </head>
 
 <body>
-    <header>
-        <h1>Gestión de Tareas</h1>
-    </header>
-    <section>
-        <br>
-        <table border="1">
-            <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-            </tr>
-            <?php echo $tareasView->getTable(); ?>
-        </table>
-    </section>
-    <a href="crearTarea.php">Crear tarea</a>
+
+    <h1>Lista de empleados</h1>
+    <br>
+    <div>
+        <?php echo $empleadosView->getTable(); ?>
+    </div>
+    <h1>Lista de tareas</h1>
+    <a href="formularioTarea.php">Crear tarea</a>
+    <br>
+    <div>
+        <?php echo $tareasView->getTable(); ?>
+    </div>
+    <?php echo $modalsView->getConfirmationModal(
+        'tareaEliminarModal',
+        'tareaForm',
+        'eliminarTarea.php'
+    ); ?>
+
+    <script src="js/tareas.js"></script>
 </body>
+
 </html>

@@ -1,0 +1,50 @@
+.modal {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .confirmation {
+    border: 1px solid #000;
+    padding: 16px;
+    background-color: #fff;
+    display: grid;
+    grid-template-areas:
+      ". . . closeBtn"
+      "msg msg msg msg"
+      ". okBtn notBtn .";
+    gap: 16px;
+  }
+  
+  .confirmation .closeBtn {
+    grid-area: closeBtn;
+  }
+  
+  .confirmation .msg {
+    grid-area: msg;
+    font-size: 24px;
+    text-align: center;
+    font-weight: bolder;
+    width: 100%;
+  }
+  
+  .confirmation .okBtn{
+      grid-area: okBtn;
+      width: 60px;
+  }
+  
+  .confirmation .notBtn{
+      grid-area: notBtn;
+      width: 60px;
+  }
+  
+  .ocultarModal{
+      display: none;
+  }
+  

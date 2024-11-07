@@ -1,15 +1,56 @@
 <?php
+
 namespace App\controllers;
 
-use App\models\entities\Empleado;
+use App\models\entities\Tarea;
 
-class TareasController {
-    public function getAllTareas() {
-        return Empleado::all();
+class TareasController
+{
+    function getAllTareas()
+    {
+        return Tarea::all();
     }
 
-    function getEmpleado($id)
+    function saveTarea($datos)
     {
-        return Empleado::find($id);
+        $tarea = new Tarea();
+        $tarea->set('titulo', $datos['titulo']);
+        $tarea->set('descripcion', $datos['descripcion']);
+        $tarea->set('fechaEstimadaFinalizacion', $datos['fechaEstimadaFinalizacion']);
+        $tarea->set('fechaFinalizacion', $datos['fechaFinalizacion']);
+        $tarea->set('creadorTarea', $datos['creadorTarea']);
+        $tarea->set('observaciones', $datos['observaciones']);
+        $tarea->set('idEmpleado', $datos['idEmpleado']);
+        $tarea->set('idEstado', $datos['idEstado']);
+        $tarea->set('idPrioridad', $datos['idPrioridad']);
+        return $tarea->save();
+    }
+
+    function getTarea($id)
+    {
+        return Tarea::find($id);
+    }
+
+    function updateTarea($datos)
+    {
+        $tarea = new Tarea();
+        $tarea->set('id', $datos['id']);
+        $tarea->set('titulo', $datos['titulo']);
+        $tarea->set('descripcion', $datos['descripcion']);
+        $tarea->set('fechaEstimadaFinalizacion', $datos['fechaEstimadaFinalizacion']);
+        $tarea->set('fechaFinalizacion', $datos['fechaFinalizacion']);
+        $tarea->set('creadorTarea', $datos['creadorTarea']);
+        $tarea->set('observaciones', $datos['observaciones']);
+        $tarea->set('idEmpleado', $datos['idEmpleado']);
+        $tarea->set('idEstado', $datos['idEstado']);
+        $tarea->set('idPrioridad', $datos['idPrioridad']);
+        return $tarea->update();
+    }
+
+    function deleteTarea($id)
+    {
+        $tarea = new Tarea();
+        $tarea->set('id', $id);
+        return $tarea->delete();
     }
 }
