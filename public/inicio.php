@@ -99,9 +99,7 @@ $idEstado = isset($_GET['idEstado']) ? $_GET['idEstado'] : '';
         </div>
     </div>
 
-    <!-- Botón para mostrar la ventana emergente -->
     <button onclick="mostrarVentanaAgrupar()">Agrupar</button>
-    <!-- Ventana emergente para agrupar -->
     <div class="fondoVentanaAgrupar" id="fondoVentanaAgrupar">
         <div class="ventanaAgrupar">
             <span class="cerrarVentanaAgrupar" onclick="cerrarVentanaAgrupar()">X</span>

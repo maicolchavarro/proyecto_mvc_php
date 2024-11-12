@@ -29,12 +29,10 @@ function cerrarVentana() {
 
 
 // AGRUPAR
-// Mostrar la ventana emergente
 function mostrarVentanaAgrupar() {
   document.getElementById('fondoVentanaAgrupar').style.display = 'flex';
 }
 
-// Cerrar la ventana emergente
 function cerrarVentanaAgrupar() {
   document.getElementById('fondoVentanaAgrupar').style.display = 'none';
 }
