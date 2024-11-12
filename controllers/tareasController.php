@@ -6,9 +6,16 @@ use App\models\entities\Tarea;
 
 class TareasController
 {
-    function getAllTareas()
+    function getAllTareas($titulo, $fechaInicio, $fechaFin, $idPrioridad, $idEmpleado, $descripcion, $idEstado)
     {
-        return Tarea::all();
+        if (!empty($titulo) || !empty($fechaInicio) || !empty($fechaFin)) {
+            return Tarea::filtrer($titulo, $fechaInicio, $fechaFin, $idPrioridad, $idEmpleado, $descripcion);
+        } elseif(!empty($idEstado))
+        {
+            return Tarea::agrupar($idEstado);
+        } else {
+            return Tarea::all();
+        }
     }
 
     function saveTarea($datos)

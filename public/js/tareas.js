@@ -16,3 +16,25 @@ const cerrarModal = () => {
 
 closeBtnModal.addEventListener("click", () => cerrarModal());
 notBtnModal.addEventListener("click", () => cerrarModal());
+
+
+// FILTRAR
+function mostrarVentana() {
+  document.getElementById('fondoVentana').style.display = 'flex';
+}
+
+function cerrarVentana() {
+  document.getElementById('fondoVentana').style.display = 'none';
+}
+
+
+// AGRUPAR
+// Mostrar la ventana emergente
+function mostrarVentanaAgrupar() {
+  document.getElementById('fondoVentanaAgrupar').style.display = 'flex';
+}
+
+// Cerrar la ventana emergente
+function cerrarVentanaAgrupar() {
+  document.getElementById('fondoVentanaAgrupar').style.display = 'none';
+}

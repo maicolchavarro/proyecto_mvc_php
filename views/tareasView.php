@@ -2,7 +2,11 @@
 
 namespace App\views;
 
+
 use App\controllers\TareasController;
+use App\models\entities\Empleado;
+use App\models\entities\Estado;
+use App\models\entities\Prioridad;
 
 class TareasViews
 {
@@ -13,14 +17,27 @@ class TareasViews
         $this->controller = new TareasController();
     }
 
-    function getTable()
+    function getTable($titulo, $fechaInicio, $fechaFin, $idPrioridad, $idEmpleado, $descripcion, $idEstado)
     {
-        $rows = '';
-        $tareas = $this->controller->getAlltareas();
-        // usort($tareas, function ($a, $b) {
-        //     return strcmp($a->get('fechaEstimadaFinalizacion'), $b->get('fechaEstimadaFinalizacion'));
-        // });
+        $empleados = Empleado::all();
+        $estados = Estado::all();
+        $prioridades = Prioridad::all();
 
+        $rows = '';
+        $tareas = $this->controller->getAlltareas($titulo, $fechaInicio, $fechaFin, $idPrioridad, $idEmpleado, $descripcion, $idEstado);
+
+        if (!is_array($tareas)) {
+            $tareas = [$tareas];
+        }
+
+        usort($tareas, function ($a, $b) {
+            $result = strcmp($a->get('idPrioridad'), $b->get('idPrioridad'));
+            if ($result === 0) {
+                return strcmp($a->get('fechaEstimadaFinalizacion'), $b->get('fechaEstimadaFinalizacion'));
+            }
+            return $result;
+        });
+        
         if (count($tareas) > 0) {
             foreach ($tareas as $tarea) {
                 $id = $tarea->get('id');
@@ -31,9 +48,33 @@ class TareasViews
                 $rows .= '   <td>' . $tarea->get('fechaFinalizacion') . '</td>';
                 $rows .= '   <td>' . $tarea->get('creadorTarea') . '</td>';
                 $rows .= '   <td>' . $tarea->get('observaciones') . '</td>';
-                $rows .= '   <td>' . $tarea->get('idEmpleado') . '</td>';
-                $rows .= '   <td>' . $tarea->get('idEstado') . '</td>';
-                $rows .= '   <td>' . $tarea->get('idPrioridad') . '</td>';
+                $idEmpleado = $tarea->get('idEmpleado');
+                $nombreEmpleado = '';
+                foreach ($empleados as $empleado) {
+                    if ($empleado->id == $idEmpleado) {
+                        $nombreEmpleado = $empleado->nombre;
+                        break;
+                    }
+                }
+                $rows .= '   <td>' . $nombreEmpleado . '</td>';
+                $idEstado = $tarea->get('idEstado');
+                $nombreEstado = '';
+                foreach ($estados as $estado) {
+                    if ($estado->id == $idEstado) {
+                        $nombreEstado = $estado->nombre;
+                        break;
+                    }
+                }
+                $rows .= '   <td>' . $nombreEstado . '</td>';
+                $idPrioridad = $tarea->get('idPrioridad');
+                $nombrePrioridad = '';
+                foreach ($prioridades as $prioridad) {
+                    if ($prioridad->id == $idPrioridad) {
+                        $nombrePrioridad = $prioridad->nombre;
+                        break;
+                    }
+                }
+                $rows .= '   <td>' . $nombrePrioridad . '</td>';
                 $rows .= '   <td>' . $tarea->get('created_at') . '</td>';
                 $rows .= '   <td>' . $tarea->get('updated_at') . '</td>';
                 $rows .= '   <td>';
@@ -77,12 +118,17 @@ class TareasViews
 
     function getFormTarea($data)
     {
+        $empleados = Empleado::all();
+        $estados = Estado::all();
+        $prioridades = Prioridad::all();
+
         $datos = null;
         $form = '<form action="confirmarRegistro.php" method="post">';
         if (!empty($data['cod'])) {
             $form .= '<input type="hidden" name="cod" value="' . $data['cod'] . '">';
             $datos = $this->controller->getTarea($data['cod']);
         }
+
         $titulo = empty($datos) ? '' : $datos->get('titulo');
         $descripcion = empty($datos) ? '' : $datos->get('descripcion');
         $fechaEstimadaFinalizacion = empty($datos) ? '' : $datos->get('fechaEstimadaFinalizacion');
@@ -93,42 +139,72 @@ class TareasViews
         $idEstado = empty($datos) ? '' : $datos->get('idEstado');
         $idPrioridad = empty($datos) ? '' : $datos->get('idPrioridad');
 
-        $form .= '      <input type="text" name="titulo" placeholder="Título" value="'. $titulo .'" required>';
-        $form .= '      <textarea name="descripcion" placeholder="Descripción" value="'. $descripcion .'" ></textarea>';
-        $form .= '      <input type="date" name="fechaEstimadaFinalizacion" value="'. $fechaEstimadaFinalizacion .'" >';
-        $form .= '      <input type="date" name="fechaFinalizacion" value="'. $fechaFinalizacion .'" >';
-        $form .= '      <input type="text" name="creadorTarea" placeholder="Creador" value="'. $creadorTarea .'" >';
-        $form .= '      <textarea name="observaciones" placeholder="Observaciones" value="'. $observaciones .'" ></textarea>';
-        $form .= '      <input type="number" name="idEmpleado" placeholder="ID Empleado"value="'. $idEmpleado .'" required>';
-        $form .= '      <input type="number" name="idEstado" placeholder="ID Estado" value="'. $idEstado .'" required>';
-        $form .= '      <input type="number" name="idPrioridad" placeholder="ID Prioridad" value="'. $idPrioridad .'" required>';
+        $form .= '      <label for="titulo">Ingrese el titulo</label>';
+        $form .= '      <input type="text" name="titulo" placeholder="Título" value="' . $titulo . '" required>';
+        $form .= '      <label for="descripcion">Ingrese la descripcion</label>';
+        $form .= '      <textarea name="descripcion" placeholder="Descripción">' . $descripcion . '</textarea>';
+        $form .= '      <label for="fechaEstimadaFinalizacion">Ingrese la fecha estimada de finalizacion</label>';
+        $form .= '      <input type="date" name="fechaEstimadaFinalizacion" value="' . $fechaEstimadaFinalizacion . '" >';
+        $form .= '      <label for="fechaFinalizacion">Ingrese la fecha de finalizacion</label>';
+        $form .= '      <input type="date" name="fechaFinalizacion" value="' . $fechaFinalizacion . '" >';
+        $form .= '      <label for="creadorTarea">Ingrese el creador de la tarea</label>';
+        $form .= '      <input type="text" name="creadorTarea" placeholder="Creador" value="' . $creadorTarea . '" >';
+        $form .= '      <label for="Observaciones">Ingrese las observaciones de la tarea</label>';
+        $form .= '      <textarea name="observaciones" placeholder="Observaciones">' . $observaciones . '</textarea>';
+        $form .= '      <label for="idEmpleado">Ingrese el empleado a cargo</label>';
+        $form .= '      <select name="idEmpleado" required>';
+        $form .= '          <option value="">Selecciona un empleado</option>';
+        foreach ($empleados as $empleado) {
+            $selected = ($empleado->id == $idEmpleado) ? 'selected' : '';
+            $form .= '      <option value="' . $empleado->id . '" ' . $selected . '>' . $empleado->nombre . '</option>';
+        }
+        $form .= '      </select>';
+        $form .= '      <label for="idEstado">Ingrese el estado actual de la tarea</label>';
+        $form .= '      <select name="idEstado" required>';
+        $form .= '          <option value="">Selecciona un estado</option>';
+        foreach ($estados as $estado) {
+            $selected = ($estado->id == $idEstado) ? 'selected' : '';
+            $form .= '      <option value="' . $estado->id . '" ' . $selected . '>' . $estado->nombre . '</option>';
+        }
+        $form .= '      </select>';
+        $form .= '      <label for="idPrioridad">Ingrese la prioridad de la tarea</label>';
+        $form .= '      <select name="idPrioridad" required>';
+        $form .= '          <option value="">Selecciona una prioridad</option>';
+        foreach ($prioridades as $prioridad) {
+            $selected = ($prioridad->id == $idPrioridad) ? 'selected' : '';
+            $form .= '      <option value="' . $prioridad->id . '" ' . $selected . '>' . $prioridad->nombre . '</option>';
+        }
+        $form .= '      </select>';
         $form .= '      <button type="submit">Guardar Tarea</button>';
+        $form .= '</form>';
+
         return $form;
     }
+
 
     function getFormTareaModificar()
     {
         $datos = $this->controller->getTarea($_GET['cod']);
-        $titulo = empty($datos) ? : $datos->get('titulo');
-        $descripcion = empty($datos) ? :  $datos->get('descripcion');
-        $fechaEstimadaFinalizacion = empty($datos) ? :  $datos->get('fechaEstimadaFinalizacion');
-        $fechaFinalizacion = empty($datos) ? :  $datos->get('fechaFinalizacion');
-        $creadorTarea = empty($datos) ? :  $datos->get('creadorTarea');
-        $observaciones = empty($datos) ? :  $datos->get('observaciones');
-        $idEmpleado = empty($datos) ? :  $datos->get('idEmpleado');
-        $idEstado = empty($datos) ? :  $datos->get('idEstado');
-        $idPrioridad = empty($datos) ? :  $datos->get('idPrioridad');
+        $titulo = empty($datos) ?: $datos->get('titulo');
+        $descripcion = empty($datos) ?:  $datos->get('descripcion');
+        $fechaEstimadaFinalizacion = empty($datos) ?:  $datos->get('fechaEstimadaFinalizacion');
+        $fechaFinalizacion = empty($datos) ?:  $datos->get('fechaFinalizacion');
+        $creadorTarea = empty($datos) ?:  $datos->get('creadorTarea');
+        $observaciones = empty($datos) ?:  $datos->get('observaciones');
+        $idEmpleado = empty($datos) ?:  $datos->get('idEmpleado');
+        $idEstado = empty($datos) ?:  $datos->get('idEstado');
+        $idPrioridad = empty($datos) ?:  $datos->get('idPrioridad');
 
         $form = '<form action="confirmarRegistro.php" method="post">';
-        $form .= '      <input type="text" name="titulo" placeholder="Título" value="'. $titulo .'" required>';
-        $form .= '      <textarea name="descripcion" placeholder="Descripción" value="'. $descripcion .'" ></textarea>';
-        $form .= '      <input type="date" name="fechaEstimadaFinalizacion" value="'. $fechaEstimadaFinalizacion .'" >';
-        $form .= '      <input type="date" name="fechaFinalizacion" value="'. $fechaFinalizacion .'" >';
-        $form .= '      <input type="text" name="creadorTarea" placeholder="Creador" value="'. $creadorTarea .'" >';
-        $form .= '      <textarea name="observaciones" placeholder="Observaciones" value="'. $observaciones .'" ></textarea>';
-        $form .= '      <input type="number" name="idEmpleado" placeholder="ID Empleado"value="'. $idEmpleado .'" required>';
-        $form .= '      <input type="number" name="idEstado" placeholder="ID Estado" value="'. $idEstado .'" required>';
-        $form .= '      <input type="number" name="idPrioridad" placeholder="ID Prioridad" value="'. $idPrioridad .'" required>';
+        $form .= '      <input type="text" name="titulo" placeholder="Título" value="' . $titulo . '" required>';
+        $form .= '      <textarea name="descripcion" placeholder="Descripción" value="' . $descripcion . '" ></textarea>';
+        $form .= '      <input type="date" name="fechaEstimadaFinalizacion" value="' . $fechaEstimadaFinalizacion . '" >';
+        $form .= '      <input type="date" name="fechaFinalizacion" value="' . $fechaFinalizacion . '" >';
+        $form .= '      <input type="text" name="creadorTarea" placeholder="Creador" value="' . $creadorTarea . '" >';
+        $form .= '      <textarea name="observaciones" placeholder="Observaciones" value="' . $observaciones . '" ></textarea>';
+        $form .= '      <input type="number" name="idEmpleado" placeholder="ID Empleado"value="' . $idEmpleado . '" required>';
+        $form .= '      <input type="number" name="idEstado" placeholder="ID Estado" value="' . $idEstado . '" required>';
+        $form .= '      <input type="number" name="idPrioridad" placeholder="ID Prioridad" value="' . $idPrioridad . '" required>';
         $form .= '      <button type="submit">Guardar Tarea</button>';
         return $form;
     }
@@ -180,7 +256,8 @@ class TareasViews
         return $msg;
     }
 
-    function getMsgDeleteTarea($id){
+    function getMsgDeleteTarea($id)
+    {
         $confirmarAccion = $this->controller->deleteTarea($id);
         $msg = '<h2>Resultado de la operación</h2>';
         if ($confirmarAccion) {
@@ -190,4 +267,5 @@ class TareasViews
         }
         return $msg;
     }
+
 }
