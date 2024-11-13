@@ -37,7 +37,7 @@ class TareasViews
             }
             return $result;
         });
-        
+
         if (count($tareas) > 0) {
             foreach ($tareas as $tarea) {
                 $id = $tarea->get('id');
@@ -57,6 +57,8 @@ class TareasViews
                     }
                 }
                 $rows .= '   <td>' . $nombreEmpleado . '</td>';
+
+
                 $idEstado = $tarea->get('idEstado');
                 $nombreEstado = '';
                 foreach ($estados as $estado) {
@@ -65,7 +67,12 @@ class TareasViews
                         break;
                     }
                 }
-                $rows .= '   <td>' . $nombreEstado . '</td>';
+                if ($idEstado == 4) {
+                    $rows .= '   <td style="color: red; font-weight: bold;">' . $nombreEstado . '</td>';
+                } else {
+                    $rows .= '   <td>' . $nombreEstado . '</td>';
+                }
+
                 $idPrioridad = $tarea->get('idPrioridad');
                 $nombrePrioridad = '';
                 foreach ($prioridades as $prioridad) {
@@ -78,11 +85,18 @@ class TareasViews
                 $rows .= '   <td>' . $tarea->get('created_at') . '</td>';
                 $rows .= '   <td>' . $tarea->get('updated_at') . '</td>';
                 $rows .= '   <td>';
-                $rows .= '      <a href="formularioTarea.php?cod=' . $id . '">modificar</a>';
+                $rows .= '      <a href="formularioTarea.php?cod=' . $id . '">Modificar</a>';
                 $rows .= '   </td>';
                 $rows .= '   <td>';
                 $rows .= '      <button onClick="eliminarTarea(' . $id . ')">Borrar</button>';
                 $rows .= '   </td>';
+                $rows .= '   <td>';
+                $rows .= '      <a href="formularioTarea.php?cod=' . $id . '&campo=responsable">Responsable</a>';
+                $rows .= '   </td>';
+                $rows .= '   <td>';
+                $rows .= '      <a href="formularioTarea.php?cod=' . $id . '&campo=estado">Estado</a>';
+                $rows .= '   </td>';
+
                 $rows .= '</tr>';
             }
         } else {
@@ -106,6 +120,8 @@ class TareasViews
         $table .= '         <th>Actualizado</th>';
         $table .= '         <th>Modificar</th>';
         $table .= '         <th>Borrar</th>';
+        $table .= '         <th>Responsable</th>';
+        $table .= '         <th>Estado</th>';
         $table .= '     </tr>';
         $table .= '  </thead>';
         $table .= ' <tbody>';
@@ -129,6 +145,10 @@ class TareasViews
             $datos = $this->controller->getTarea($data['cod']);
         }
 
+        $campo = isset($data['campo']) ? $data['campo'] : '';
+        $idEmpleado = empty($datos) ? '' : $datos->get('idEmpleado');
+        $idEstado = empty($datos) ? '' : $datos->get('idEstado');
+
         $titulo = empty($datos) ? '' : $datos->get('titulo');
         $descripcion = empty($datos) ? '' : $datos->get('descripcion');
         $fechaEstimadaFinalizacion = empty($datos) ? '' : $datos->get('fechaEstimadaFinalizacion');
@@ -139,48 +159,179 @@ class TareasViews
         $idEstado = empty($datos) ? '' : $datos->get('idEstado');
         $idPrioridad = empty($datos) ? '' : $datos->get('idPrioridad');
 
-        $form .= '      <label for="titulo">Ingrese el titulo</label>';
-        $form .= '      <input type="text" name="titulo" placeholder="Título" value="' . $titulo . '" required>';
-        $form .= '      <label for="descripcion">Ingrese la descripcion</label>';
-        $form .= '      <textarea name="descripcion" placeholder="Descripción">' . $descripcion . '</textarea>';
-        $form .= '      <label for="fechaEstimadaFinalizacion">Ingrese la fecha estimada de finalizacion</label>';
-        $form .= '      <input type="date" name="fechaEstimadaFinalizacion" value="' . $fechaEstimadaFinalizacion . '" >';
-        $form .= '      <label for="fechaFinalizacion">Ingrese la fecha de finalizacion</label>';
-        $form .= '      <input type="date" name="fechaFinalizacion" value="' . $fechaFinalizacion . '" >';
-        $form .= '      <label for="creadorTarea">Ingrese el creador de la tarea</label>';
-        $form .= '      <input type="text" name="creadorTarea" placeholder="Creador" value="' . $creadorTarea . '" >';
-        $form .= '      <label for="Observaciones">Ingrese las observaciones de la tarea</label>';
-        $form .= '      <textarea name="observaciones" placeholder="Observaciones">' . $observaciones . '</textarea>';
-        $form .= '      <label for="idEmpleado">Ingrese el empleado a cargo</label>';
-        $form .= '      <select name="idEmpleado" required>';
-        $form .= '          <option value="">Selecciona un empleado</option>';
-        foreach ($empleados as $empleado) {
-            $selected = ($empleado->id == $idEmpleado) ? 'selected' : '';
-            $form .= '      <option value="' . $empleado->id . '" ' . $selected . '>' . $empleado->nombre . '</option>';
+        if ($campo === 'responsable') {
+            $form .= '<label for="titulo" style="display: none;">Ingrese el título</label>';
+            $form .= '<input type="hidden" name="titulo" value="' . $titulo . '">';
+
+            $form .= '<label for="descripcion" style="display: none;">Ingrese la descripción</label>';
+            $form .= '<textarea name="descripcion" style="display: none;">' . $descripcion . '</textarea>';
+            $form .= '<br>';
+
+            $form .= '<label for="fechaEstimadaFinalizacion" style="display: none;">Ingrese la fecha estimada de finalización</label>';
+            $form .= '<input type="hidden" name="fechaEstimadaFinalizacion" value="' . $fechaEstimadaFinalizacion . '">';
+            $form .= '<br>';
+
+            $form .= '<label for="fechaFinalizacion" style="display: none;">Ingrese la fecha de finalización</label>';
+            $form .= '<input type="hidden" name="fechaFinalizacion" value="' . $fechaFinalizacion . '">';
+            $form .= '<br>';
+
+            $form .= '<label for="creadorTarea" style="display: none;">Ingrese el creador de la tarea</label>';
+            $form .= '<input type="hidden" name="creadorTarea" value="' . $creadorTarea . '">';
+            $form .= '<br>';
+
+            $form .= '<label for="observaciones" style="display: none;">Ingrese las observaciones de la tarea</label>';
+            $form .= '<textarea name="observaciones" style="display: none;">' . $observaciones . '</textarea>';
+            $form .= '<br>';
+
+            $form .= '<label for="idEmpleado">Ingrese el empleado a cargo</label>';
+            $form .= '<select name="idEmpleado" required>';
+            $form .= '    <option value="">Selecciona un empleado</option>';
+            foreach ($empleados as $empleado) {
+                $selected = ($empleado->id == $idEmpleado) ? 'selected' : '';
+                $form .= '    <option value="' . $empleado->id . '" ' . $selected . '>' . $empleado->nombre . '</option>';
+            }
+            $form .= '</select>';
+            $form .= '<br>';
+
+            $form .= '<label for="idEstado" style="display: none;">Ingrese el estado actual de la tarea</label>';
+            $form .= '<select name="idEstado" required style="display: none;">';
+            $form .= '    <option value="">Selecciona un estado</option>';
+            foreach ($estados as $estado) {
+                $selected = ($estado->id == $idEstado) ? 'selected' : '';
+                $form .= '    <option value="' . $estado->id . '" ' . $selected . '>' . $estado->nombre . '</option>';
+            }
+            $form .= '</select>';
+            $form .= '<br>';
+
+            $form .= '<label for="idPrioridad" style="display: none;">Ingrese la prioridad de la tarea</label>';
+            $form .= '<select name="idPrioridad" required style="display: none;">';
+            $form .= '    <option value="">Selecciona una prioridad</option>';
+            foreach ($prioridades as $prioridad) {
+                $selected = ($prioridad->id == $idPrioridad) ? 'selected' : '';
+                $form .= '    <option value="' . $prioridad->id . '" ' . $selected . '>' . $prioridad->nombre . '</option>';
+            }
+            $form .= '</select>';
+            $form .= '<br>';
+
+            $form .= '<button type="submit">Guardar Tarea</button>';
+            $form .= '</form>';
+        } elseif ($campo === 'estado') {
+            $form .= '<label for="titulo" style="display: none;">Ingrese el título</label>';
+            $form .= '<input type="hidden" name="titulo" value="' . $titulo . '">';
+            $form .= '<br>';
+
+            $form .= '<label for="descripcion" style="display: none;">Ingrese la descripción</label>';
+            $form .= '<textarea name="descripcion" style="display: none;">' . $descripcion . '</textarea>';
+            $form .= '<br>';
+
+            $form .= '<label for="fechaEstimadaFinalizacion" style="display: none;">Ingrese la fecha estimada de finalización</label>';
+            $form .= '<input type="hidden" name="fechaEstimadaFinalizacion" value="' . $fechaEstimadaFinalizacion . '">';
+            $form .= '<br>';
+
+            $form .= '<label for="fechaFinalizacion" style="display: none;">Ingrese la fecha de finalización</label>';
+            $form .= '<input type="hidden" name="fechaFinalizacion" value="' . $fechaFinalizacion . '">';
+            $form .= '<br>';
+
+            $form .= '<label for="creadorTarea" style="display: none;">Ingrese el creador de la tarea</label>';
+            $form .= '<input type="hidden" name="creadorTarea" value="' . $creadorTarea . '">';
+            $form .= '<br>';
+
+            $form .= '<label for="observaciones" style="display: none;">Ingrese las observaciones de la tarea</label>';
+            $form .= '<textarea name="observaciones" style="display: none;">' . $observaciones . '</textarea>';
+            $form .= '<br>';
+
+            $form .= '<label for="idEmpleado" style="display: none;">Ingrese el empleado a cargo</label>';
+            $form .= '<select name="idEmpleado" required style="display: none;">';
+            $form .= '    <option value="">Selecciona un empleado</option>';
+            foreach ($empleados as $empleado) {
+                $selected = ($empleado->id == $idEmpleado) ? 'selected' : '';
+                $form .= '    <option value="' . $empleado->id . '" ' . $selected . '>' . $empleado->nombre . '</option>';
+            }
+            $form .= '</select>';
+            $form .= '<br>';
+
+            $form .= '<label for="idEstado">Ingrese el estado actual de la tarea</label>';
+            $form .= '<select name="idEstado" required>';
+            $form .= '    <option value="">Selecciona un estado</option>';
+            foreach ($estados as $estado) {
+                $selected = ($estado->id == $idEstado) ? 'selected' : '';
+                $form .= '    <option value="' . $estado->id . '" ' . $selected . '>' . $estado->nombre . '</option>';
+            }
+            $form .= '</select>';
+            $form .= '<br>';
+
+            $form .= '<label for="idPrioridad" style="display: none;">Ingrese la prioridad de la tarea</label>';
+            $form .= '<select name="idPrioridad" required style="display: none;">';
+            $form .= '    <option value="">Selecciona una prioridad</option>';
+            foreach ($prioridades as $prioridad) {
+                $selected = ($prioridad->id == $idPrioridad) ? 'selected' : '';
+                $form .= '    <option value="' . $prioridad->id . '" ' . $selected . '>' . $prioridad->nombre . '</option>';
+            }
+            $form .= '</select>';
+            $form .= '<br>';
+
+            $form .= '<button type="submit">Guardar Tarea</button>';
+            $form .= '</form>';
+        } else {
+            $form .= '<label for="titulo">Ingrese el título</label>';
+            $form .= '<input type="text" name="titulo" placeholder="Título" value="' . $titulo . '" required>';
+            $form .= '<br>';
+
+            $form .= '<label for="descripcion">Ingrese la descripción</label>';
+            $form .= '<textarea name="descripcion" placeholder="Descripción">' . $descripcion . '</textarea>';
+            $form .= '<br>';
+
+            $form .= '<label for="fechaEstimadaFinalizacion">Ingrese la fecha estimada de finalización</label>';
+            $form .= '<input type="date" name="fechaEstimadaFinalizacion" value="' . $fechaEstimadaFinalizacion . '">';
+            $form .= '<br>';
+
+            $form .= '<label for="fechaFinalizacion">Ingrese la fecha de finalización</label>';
+            $form .= '<input type="date" name="fechaFinalizacion" value="' . $fechaFinalizacion . '">';
+            $form .= '<br>';
+
+            $form .= '<label for="creadorTarea">Ingrese el creador de la tarea</label>';
+            $form .= '<input type="text" name="creadorTarea" placeholder="Creador" value="' . $creadorTarea . '">';
+            $form .= '<br>';
+
+            $form .= '<label for="observaciones">Ingrese las observaciones de la tarea</label>';
+            $form .= '<textarea name="observaciones" placeholder="Observaciones">' . $observaciones . '</textarea>';
+            $form .= '<br>';
+
+            $form .= '<label for="idEmpleado">Ingrese el empleado a cargo</label>';
+            $form .= '<select name="idEmpleado" required>';
+            $form .= '    <option value="">Selecciona un empleado</option>';
+            foreach ($empleados as $empleado) {
+                $selected = ($empleado->id == $idEmpleado) ? 'selected' : '';
+                $form .= '    <option value="' . $empleado->id . '" ' . $selected . '>' . $empleado->nombre . '</option>';
+            }
+            $form .= '</select>';
+            $form .= '<br>';
+
+            $form .= '<label for="idEstado">Ingrese el estado actual de la tarea</label>';
+            $form .= '<select name="idEstado" required>';
+            $form .= '    <option value="">Selecciona un estado</option>';
+            foreach ($estados as $estado) {
+                $selected = ($estado->id == $idEstado) ? 'selected' : '';
+                $form .= '    <option value="' . $estado->id . '" ' . $selected . '>' . $estado->nombre . '</option>';
+            }
+            $form .= '</select>';
+            $form .= '<br>';
+
+            $form .= '<label for="idPrioridad">Ingrese la prioridad de la tarea</label>';
+            $form .= '<select name="idPrioridad" required>';
+            $form .= '    <option value="">Selecciona una prioridad</option>';
+            foreach ($prioridades as $prioridad) {
+                $selected = ($prioridad->id == $idPrioridad) ? 'selected' : '';
+                $form .= '    <option value="' . $prioridad->id . '" ' . $selected . '>' . $prioridad->nombre . '</option>';
+            }
+            $form .= '</select>';
+            $form .= '<button type="submit">Guardar Tarea</button>';
+            $form .= '</form>';
         }
-        $form .= '      </select>';
-        $form .= '      <label for="idEstado">Ingrese el estado actual de la tarea</label>';
-        $form .= '      <select name="idEstado" required>';
-        $form .= '          <option value="">Selecciona un estado</option>';
-        foreach ($estados as $estado) {
-            $selected = ($estado->id == $idEstado) ? 'selected' : '';
-            $form .= '      <option value="' . $estado->id . '" ' . $selected . '>' . $estado->nombre . '</option>';
-        }
-        $form .= '      </select>';
-        $form .= '      <label for="idPrioridad">Ingrese la prioridad de la tarea</label>';
-        $form .= '      <select name="idPrioridad" required>';
-        $form .= '          <option value="">Selecciona una prioridad</option>';
-        foreach ($prioridades as $prioridad) {
-            $selected = ($prioridad->id == $idPrioridad) ? 'selected' : '';
-            $form .= '      <option value="' . $prioridad->id . '" ' . $selected . '>' . $prioridad->nombre . '</option>';
-        }
-        $form .= '      </select>';
-        $form .= '      <button type="submit">Guardar Tarea</button>';
-        $form .= '</form>';
+
 
         return $form;
     }
-
 
     function getFormTareaModificar()
     {
@@ -267,5 +418,4 @@ class TareasViews
         }
         return $msg;
     }
-
 }

@@ -6,39 +6,46 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    padding-top: 20px;
 }
 
 .titulo {
-    font-size: 2rem;
+    font-size: 2.5rem;
     color: #333;
-    margin-top: 20px;
     margin-bottom: 20px;
 }
 
-.btn-crear-tarea, .btn-filtrar, .btn-agrupar, .btn-agrupar1, .btn-filtrar-submit, .btn-agrupar-submit {
+.btn-crear-tarea,
+.btn-filtrar,
+.btn-agrupar,
+.btn-agrupar1,
+.btn-filtrar-submit,
+.btn-agrupar-submit {
     background-color: #007bff;
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 12px 24px;
     font-size: 1rem;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s;
     margin: 10px;
+    text-align: center;
 }
 
 .btn-crear-tarea {
-    font-weight: bold;
     background-color: #28a745;
+    text-decoration: none;
 }
 
-.btn-crear-tarea:hover, .btn-filtrar:hover, .btn-agrupar:hover, .btn-agrupar1:hover {
+.btn-crear-tarea:hover,
+.btn-filtrar:hover,
+.btn-agrupar:hover,
+.btn-agrupar1:hover {
     background-color: #0056b3;
-}
-
-.btn-filtrar, .btn-agrupar {
-    font-weight: bold;
+    transform: scale(1.05);
 }
 
 .btn-agrupar1 {
@@ -49,18 +56,23 @@
     background-color: #c82333;
 }
 
-.btn-filtrar-submit, .btn-agrupar-submit {
+.btn-filtrar-submit,
+.btn-agrupar-submit {
     background-color: #007bff;
     padding: 12px 25px;
     width: 100%;
     border-radius: 5px;
+    font-size: 1.1rem;
 }
 
-.btn-filtrar-submit:hover, .btn-agrupar-submit:hover {
+.btn-filtrar-submit:hover,
+.btn-agrupar-submit:hover {
     background-color: #0056b3;
+    transform: scale(1.05);
 }
 
-.fondoVentana, .fondoVentanaAgrupar {
+.fondoVentana,
+.fondoVentanaAgrupar {
     position: fixed;
     top: 0;
     left: 0;
@@ -72,67 +84,160 @@
     align-items: center;
 }
 
-.ventana, .ventanaAgrupar {
+.ventana,
+.ventanaAgrupar {
     background-color: white;
-    padding: 20px;
+    padding: 25px;
     border-radius: 8px;
     width: 90%;
-    max-width: 400px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 450px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    position: relative;
 }
 
-.cerrarVentana, .cerrarVentanaAgrupar {
+.cerrarVentana,
+.cerrarVentanaAgrupar {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 15px;
+    right: 15px;
     font-size: 1.5rem;
     cursor: pointer;
+    color: #777;
+    transition: color 0.3s ease;
 }
 
-.cerrarVentana:hover, .cerrarVentanaAgrupar:hover {
+.cerrarVentana:hover,
+.cerrarVentanaAgrupar:hover {
     color: red;
 }
 
-.formulario-filtro, .formulario-agrupar {
+.formulario-filtro,
+.formulario-agrupar {
     display: flex;
     flex-direction: column;
+    gap: 5px;
 }
 
-.label-filtro, .label-agrupar {
-    margin-bottom: 8px;
+.label-filtro,
+.label-agrupar {
     font-size: 1rem;
     color: #555;
 }
 
-.input-filtro, .select-filtro, .select-agrupar {
-    padding: 10px;
+.input-filtro,
+.select-filtro,
+.select-agrupar {
+    padding: 12px;
     font-size: 1rem;
-    margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    background-color: #fff;
+    transition: border-color 0.3s ease;
 }
 
-.input-filtro:focus, .select-filtro:focus, .select-agrupar:focus {
+.input-filtro:focus,
+.select-filtro:focus,
+.select-agrupar:focus {
     border-color: #007bff;
     outline: none;
 }
 
 .tabla-tareas {
-    width: 90%;
+    width: 110%;
     margin-top: 20px;
-    padding: 10px;
+    padding: 15px;
     background-color: white;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.tabla-tareas table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+.tabla-tareas th,
+.tabla-tareas td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-size: 0.7rem;
+}
+
+.tabla-tareas th {
+    background-color: #007bff;
+    color: white;
+}
+
+.tabla-tareas td {
+    background-color: #f9f9f9;
+}
+
+.tabla-tareas tr:hover td {
+    background-color: #f1f1f1;
+}
+
+.tabla-tareas td a, td button {
+    display: inline-block;
+    padding: 8px 12px;
+    text-decoration: none;
+    border-radius: 5px; 
+    margin: 5px; 
+    transition: all 0.3s ease;
+}
+
+.tabla-tareas td a[href*="formularioTarea.php?cod"] {
+    background-color: #4CAF50; 
+    color: white; 
+}
+
+.tabla-tareas td a[href*="formularioTarea.php?cod"]:hover {
+    background-color: #45a049; 
+}
+
+.tabla-tareas td button {
+    background-color: #f44336; 
+    color: white; 
+    border: none; 
+    cursor: pointer; 
+}
+
+.tabla-tareas td button:hover {
+    background-color: #e53935; 
+}
+
+.tabla-tareas td a[href*="formularioTarea.php?campo="] {
+    background-color: #2196F3;
+    color: white;
+}
+
+.tabla-tareas td a[href*="formularioTarea.php?campo="]:hover {
+    background-color: #1976D2; 
+}
+
+.form-limpiar {
+    margin-top: 20px;
 }
 
 @media (max-width: 768px) {
-    .btn-crear-tarea, .btn-filtrar, .btn-agrupar, .btn-agrupar1, .btn-filtrar-submit, .btn-agrupar-submit {
+
+    .btn-crear-tarea,
+    .btn-filtrar,
+    .btn-agrupar,
+    .btn-agrupar1,
+    .btn-filtrar-submit,
+    .btn-agrupar-submit {
         width: 100%;
     }
 
-    .ventana, .ventanaAgrupar {
+    .ventana,
+    .ventanaAgrupar {
         width: 90%;
         padding: 15px;
+    }
+
+    .tabla-tareas {
+        width: 100%;
     }
 }
