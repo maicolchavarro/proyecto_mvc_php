@@ -47,27 +47,28 @@ $idEstado = isset($_GET['idEstado']) ? $_GET['idEstado'] : '';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio</title>
     <link rel="stylesheet" href="css/modals.css">
+    <link rel="stylesheet" href="css/inicio.css">
 </head>
 
-<body>
-    <h1>Lista de tareas</h1>
-    <a href="formularioTarea.php">Crear tarea</a>
+<body class="body-inicio">
+    <h1 class="titulo">Lista de tareas</h1>
+    <a href="formularioTarea.php" class="btn-crear-tarea">Crear tarea</a>
     <br>
 
-    <button onclick="mostrarVentana()">Filtrar</button>
+    <button onclick="mostrarVentana()" class="btn-filtrar">Filtrar</button>
     <div class="fondoVentana" id="fondoVentana">
         <div class="ventana">
             <span class="cerrarVentana" onclick="cerrarVentana()">X</span>
             <h2>Filtrar por:</h2>
-            <form id="formularioFiltro" action="#">
-                <label for="fechaInicio">Fecha de inicio</label>
-                <input type="date" id="fechaInicio" name="fechaInicio">
+            <form id="formularioFiltro" action="#" class="formulario-filtro">
+                <label for="fechaInicio" class="label-filtro">Fecha de inicio</label>
+                <input type="date" id="fechaInicio" name="fechaInicio" class="input-filtro">
 
-                <label for="fechaFin">Fecha de fin</label>
-                <input type="date" id="fechaFin" name="fechaFin">
+                <label for="fechaFin" class="label-filtro">Fecha de fin</label>
+                <input type="date" id="fechaFin" name="fechaFin" class="input-filtro">
 
-                <label for="idPrioridad">Ingrese la prioridad de la tarea</label>
-                <select name="idPrioridad" id="idPrioridad">
+                <label for="idPrioridad" class="label-filtro">Ingrese la prioridad de la tarea</label>
+                <select name="idPrioridad" id="idPrioridad" class="select-filtro">
                     <option value="">Selecciona una prioridad</option>
                     <?php
                     foreach ($prioridades as $prioridad) {
@@ -77,8 +78,8 @@ $idEstado = isset($_GET['idEstado']) ? $_GET['idEstado'] : '';
                     ?>
                 </select>
 
-                <label for="idEmpleado">Ingrese la persona responsable de la tarea</label>
-                <select name="idEmpleado" id="idEmpleado">
+                <label for="idEmpleado" class="label-filtro">Ingrese la persona responsable de la tarea</label>
+                <select name="idEmpleado" id="idEmpleado" class="select-filtro">
                     <option value="">Selecciona un empleado</option>
                     <?php
                     foreach ($empleados as $empleado) {
@@ -88,25 +89,25 @@ $idEstado = isset($_GET['idEstado']) ? $_GET['idEstado'] : '';
                     ?>
                 </select>
 
-                <label for="titulo">Titulo:</label>
-                <input type="text" id="titulo" name="titulo">
+                <label for="titulo" class="label-filtro">Titulo:</label>
+                <input type="text" id="titulo" name="titulo" class="input-filtro">
 
-                <label for="descripcion">Descripcion:</label>
-                <input type="text" id="descripcion" name="descripcion">
+                <label for="descripcion" class="label-filtro">Descripcion:</label>
+                <input type="text" id="descripcion" name="descripcion" class="input-filtro">
 
-                <button type="submit">Filtrar</button>
+                <button type="submit" class="btn-filtrar-submit">Filtrar</button>
             </form>
         </div>
     </div>
 
-    <button onclick="mostrarVentanaAgrupar()">Agrupar</button>
+    <button onclick="mostrarVentanaAgrupar()" class="btn-agrupar">Agrupar</button>
     <div class="fondoVentanaAgrupar" id="fondoVentanaAgrupar">
         <div class="ventanaAgrupar">
             <span class="cerrarVentanaAgrupar" onclick="cerrarVentanaAgrupar()">X</span>
             <h2>Agrupar por:</h2>
-            <form id="formularioAgrupar" action="#">
-                <label for="idEstado">Ingrese el estado de la tarea</label>
-                <select name="idEstado" id="idEstado">
+            <form id="formularioAgrupar" action="#" class="formulario-agrupar">
+                <label for="idEstado" class="label-agrupar">Ingrese el estado de la tarea</label>
+                <select name="idEstado" id="idEstado" class="select-agrupar">
                     <option value="">Selecciona un estado</option>
                     <?php
                     foreach ($estados as $estado) {
@@ -116,17 +117,16 @@ $idEstado = isset($_GET['idEstado']) ? $_GET['idEstado'] : '';
                     ?>
                 </select>
 
-                <button type="submit">Agrupar</button>
+                <button type="submit" class="btn-agrupar-submit">Agrupar</button>
             </form>
         </div>
     </div>
 
-
-    <form action="inicio.php">
-        <button type="submit">Limpiar</button>
+    <form action="inicio.php" class="form-limpiar">
+        <button type="submit" class="btn-agrupar1">Limpiar</button>
     </form>
 
-    <div>
+    <div class="tabla-tareas">
         <?php
         echo $tareasView->getTable($titulo, $fechaInicio, $fechaFin, $idPrioridad, $idEmpleado, $descripcion, $idEstado);
         ?>

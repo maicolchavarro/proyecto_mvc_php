@@ -1,0 +1,138 @@
+.body-inicio {
+    font-family: Arial, sans-serif;
+    background-color: #f4f7fc;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.titulo {
+    font-size: 2rem;
+    color: #333;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.btn-crear-tarea, .btn-filtrar, .btn-agrupar, .btn-agrupar1, .btn-filtrar-submit, .btn-agrupar-submit {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 10px;
+}
+
+.btn-crear-tarea {
+    font-weight: bold;
+    background-color: #28a745;
+}
+
+.btn-crear-tarea:hover, .btn-filtrar:hover, .btn-agrupar:hover, .btn-agrupar1:hover {
+    background-color: #0056b3;
+}
+
+.btn-filtrar, .btn-agrupar {
+    font-weight: bold;
+}
+
+.btn-agrupar1 {
+    background-color: #dc3545;
+}
+
+.btn-agrupar1:hover {
+    background-color: #c82333;
+}
+
+.btn-filtrar-submit, .btn-agrupar-submit {
+    background-color: #007bff;
+    padding: 12px 25px;
+    width: 100%;
+    border-radius: 5px;
+}
+
+.btn-filtrar-submit:hover, .btn-agrupar-submit:hover {
+    background-color: #0056b3;
+}
+
+.fondoVentana, .fondoVentanaAgrupar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.ventana, .ventanaAgrupar {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.cerrarVentana, .cerrarVentanaAgrupar {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.cerrarVentana:hover, .cerrarVentanaAgrupar:hover {
+    color: red;
+}
+
+.formulario-filtro, .formulario-agrupar {
+    display: flex;
+    flex-direction: column;
+}
+
+.label-filtro, .label-agrupar {
+    margin-bottom: 8px;
+    font-size: 1rem;
+    color: #555;
+}
+
+.input-filtro, .select-filtro, .select-agrupar {
+    padding: 10px;
+    font-size: 1rem;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.input-filtro:focus, .select-filtro:focus, .select-agrupar:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.tabla-tareas {
+    width: 90%;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+    .btn-crear-tarea, .btn-filtrar, .btn-agrupar, .btn-agrupar1, .btn-filtrar-submit, .btn-agrupar-submit {
+        width: 100%;
+    }
+
+    .ventana, .ventanaAgrupar {
+        width: 90%;
+        padding: 15px;
+    }
+}
